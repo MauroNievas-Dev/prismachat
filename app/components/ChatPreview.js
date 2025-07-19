@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { Menu, Send, User, Bot } from "lucide-react";
+import "./ChatPreview.css";
 
 const ChatPreview = ({
   config,
@@ -155,8 +156,6 @@ const ChatPreview = ({
               border: `1px solid ${currentTheme.colors.border}`,
               borderRadius: currentTheme.spacing.borderRadius,
               padding: currentTheme.spacing.containerPadding,
-              height: "calc(100% - 160px)",
-              overflowY: "auto",
               marginTop: config.menuPosition.position === "top" ? "80px" : "20px",
               marginBottom: "20px",
             }}
@@ -197,8 +196,6 @@ const ChatPreview = ({
           <div
             className="input-area flex gap-2"
             style={{
-              position: "absolute",
-              bottom: "20px",
               left: currentTheme.spacing.containerPadding,
               right: currentTheme.spacing.containerPadding,
             }}
