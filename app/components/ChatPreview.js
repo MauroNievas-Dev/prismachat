@@ -76,6 +76,12 @@ const ChatPreview = ({
       cursor: config.menuPosition.type === "draggable" ? "move" : "default",
       userSelect: "none",
       minWidth: "150px",
+      ...(config.menuPosition.position === "top" && {
+        display: "flex",
+        gap: "8px",
+        alignItems: "center",
+        justifyContent: "center",
+      }),
     };
 
     if (config.menuPosition.type === "draggable") {
@@ -166,7 +172,11 @@ const ChatPreview = ({
               <Menu size={16} style={{ color: currentTheme.colors.text }} />
               <span style={{ color: currentTheme.colors.text, fontSize: "14px" }}>Menú</span>
             </div>
-            <div className="space-y-1">
+            <div
+              className={
+                config.menuPosition.position === "top" ? "flex gap-2" : "space-y-1"
+              }
+            >
               <div className="px-2 py-1 text-sm rounded" style={{ color: currentTheme.colors.textSecondary }}>
                 Nueva conversación
               </div>
