@@ -1,0 +1,9 @@
+.messages-area {
+  height: calc(100% - 160px);
+  overflow-y: auto;
+}
+
+.input-area {
+  position: absolute;
+  bottom: 20px;
+}

@@ -2,100 +2,12 @@
 import React, { useState } from 'react';
 import ChatPreview from './components/ChatPreview';
 import ConfigPanel from './components/ConfigPanel';
+import initialConfig from '../config/chatConfig.json' assert { type: 'json' };
 
 const ChatFrontendGenerator = () => {
-  const [config, setConfig] = useState({
-    menuPosition: {
-      type: 'fixed',
-      position: 'left',
-      coordinates: { x: 0, y: 0 }
-    },
-    textInput: {
-      width: '100%',
-      height: '50px'
-    },
-    themes: ['modern', 'classic', 'minimal'],
-    defaultTheme: 'modern',
-    themeConfigs: {
-      modern: {
-        colors: {
-          background: '#0f0f23',
-          chatBackground: '#1a1a2e',
-          userMessage: '#2d4a88',
-          aiMessage: '#333366',
-          text: '#ffffff',
-          textSecondary: '#b0b0b0',
-          menuBackground: '#16213e',
-          border: '#3d4a6b',
-          accent: '#4f7cff'
-        },
-        typography: {
-          fontFamily: 'Inter, system-ui, sans-serif',
-          fontSize: '14px',
-          fontWeight: '400',
-          lineHeight: '1.5'
-        },
-        spacing: {
-          messagePadding: '12px 16px',
-          messageMargin: '8px 0',
-          containerPadding: '20px',
-          borderRadius: '12px'
-        }
-      },
-      classic: {
-        colors: {
-          background: '#f5f5f5',
-          chatBackground: '#ffffff',
-          userMessage: '#007bff',
-          aiMessage: '#e9ecef',
-          text: '#333333',
-          textSecondary: '#666666',
-          menuBackground: '#ffffff',
-          border: '#dee2e6',
-          accent: '#007bff'
-        },
-        typography: {
-          fontFamily: 'Arial, sans-serif',
-          fontSize: '14px',
-          fontWeight: '400',
-          lineHeight: '1.4'
-        },
-        spacing: {
-          messagePadding: '10px 15px',
-          messageMargin: '5px 0',
-          containerPadding: '15px',
-          borderRadius: '8px'
-        }
-      },
-      minimal: {
-        colors: {
-          background: '#ffffff',
-          chatBackground: '#ffffff',
-          userMessage: '#000000',
-          aiMessage: '#f8f9fa',
-          text: '#000000',
-          textSecondary: '#666666',
-          menuBackground: '#ffffff',
-          border: '#e0e0e0',
-          accent: '#000000'
-        },
-        typography: {
-          fontFamily: 'SF Pro Display, -apple-system, sans-serif',
-          fontSize: '15px',
-          fontWeight: '400',
-          lineHeight: '1.6'
-        },
-        spacing: {
-          messagePadding: '16px 20px',
-          messageMargin: '12px 0',
-          containerPadding: '24px',
-          borderRadius: '20px'
-        }
-      }
-    }
-  });
+  const [config, setConfig] = useState(initialConfig);
 
-  const [activeTheme, setActiveTheme] = useState('modern');
+  const [activeTheme, setActiveTheme] = useState(initialConfig.defaultTheme);
   const [sampleMessages] = useState([
     { type: 'user', content: 'Hola, ¿cómo estás?' },
     { type: 'ai', content: '¡Hola! Estoy muy bien, gracias por preguntar. ¿En qué puedo ayudarte hoy?' },
