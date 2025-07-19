@@ -1,6 +1,7 @@
-"use client"
-import React, { useState, useEffect, useRef } from 'react';
-import { Download, Menu, Send, User, Bot, Palette, Type, Layout, Settings } from 'lucide-react';
+"use client";
+import React, { useState } from 'react';
+import ChatPreview from './components/ChatPreview';
+import ConfigPanel from './components/ConfigPanel';
 
 const ChatFrontendGenerator = () => {
   const [config, setConfig] = useState({
@@ -95,11 +96,6 @@ const ChatFrontendGenerator = () => {
   });
 
   const [activeTheme, setActiveTheme] = useState('modern');
-  const [isDraggingMenu, setIsDraggingMenu] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const menuRef = useRef(null);
-  const chatContainerRef = useRef(null);
-
   const [sampleMessages] = useState([
     { type: 'user', content: 'Hola, ¿cómo estás?' },
     { type: 'ai', content: '¡Hola! Estoy muy bien, gracias por preguntar. ¿En qué puedo ayudarte hoy?' },
@@ -108,51 +104,6 @@ const ChatFrontendGenerator = () => {
   ]);
 
   const currentTheme = config.themeConfigs[activeTheme];
-
-  const handleMenuDragStart = (e) => {
-    if (config.menuPosition.type !== 'draggable') return;
-
-    setIsDraggingMenu(true);
-    const rect = menuRef.current.getBoundingClientRect();
-    const containerRect = chatContainerRef.current.getBoundingClientRect();
-
-    setDragOffset({
-      x: e.clientX - rect.left + containerRect.left,
-      y: e.clientY - rect.top + containerRect.top
-    });
-  };
-
-  const handleMenuDrag = (e) => {
-    if (!isDraggingMenu || config.menuPosition.type !== 'draggable') return;
-
-    const containerRect = chatContainerRef.current.getBoundingClientRect();
-    const newX = e.clientX - containerRect.left - dragOffset.x;
-    const newY = e.clientY - containerRect.top - dragOffset.y;
-
-    setConfig(prev => ({
-      ...prev,
-      menuPosition: {
-        ...prev.menuPosition,
-        coordinates: { x: Math.max(0, newX), y: Math.max(0, newY) }
-      }
-    }));
-  };
-
-  const handleMenuDragEnd = () => {
-    setIsDraggingMenu(false);
-  };
-
-  useEffect(() => {
-    if (isDraggingMenu) {
-      document.addEventListener('mousemove', handleMenuDrag);
-      document.addEventListener('mouseup', handleMenuDragEnd);
-
-      return () => {
-        document.removeEventListener('mousemove', handleMenuDrag);
-        document.removeEventListener('mouseup', handleMenuDragEnd);
-      };
-    }
-  }, [isDraggingMenu]);
 
   const updateThemeConfig = (themeName, path, value) => {
     setConfig(prev => {
@@ -256,14 +207,12 @@ const ChatFrontendGenerator = () => {
     const configBlob = new Blob([JSON.stringify(configToExport, null, 2)], { type: 'application/json' });
     const cssBlob = new Blob([generateCSS()], { type: 'text/css' });
 
-    // Descargar JSON
     const configUrl = URL.createObjectURL(configBlob);
     const configLink = document.createElement('a');
     configLink.href = configUrl;
     configLink.download = 'chat-config.json';
     configLink.click();
 
-    // Descargar CSS
     setTimeout(() => {
       const cssUrl = URL.createObjectURL(cssBlob);
       const cssLink = document.createElement('a');
@@ -273,358 +222,24 @@ const ChatFrontendGenerator = () => {
     }, 500);
   };
 
-  const getMenuStyle = () => {
-    const baseStyle = {
-      backgroundColor: currentTheme.colors.menuBackground,
-      border: `1px solid ${currentTheme.colors.border}`,
-      borderRadius: currentTheme.spacing.borderRadius,
-      padding: '16px',
-      cursor: config.menuPosition.type === 'draggable' ? 'move' : 'default',
-      userSelect: 'none',
-      minWidth: '150px'
-    };
-
-    if (config.menuPosition.type === 'draggable') {
-      return {
-        ...baseStyle,
-        position: 'absolute',
-        left: `${config.menuPosition.coordinates.x}px`,
-        top: `${config.menuPosition.coordinates.y}px`,
-        zIndex: 10
-      };
-    }
-
-    switch (config.menuPosition.position) {
-      case 'left':
-        return { ...baseStyle, position: 'absolute', left: '20px', top: '20px' };
-      case 'right':
-        return { ...baseStyle, position: 'absolute', right: '20px', top: '20px' };
-      case 'top':
-        return { ...baseStyle, position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)' };
-      case 'bottom':
-        return { ...baseStyle, position: 'absolute', bottom: '80px', left: '50%', transform: 'translateX(-50%)' };
-      default:
-        return { ...baseStyle, position: 'absolute', left: '20px', top: '20px' };
-    }
-  };
-
   return (
     <div className="flex h-screen bg-gray-100">
-      {/* Panel de Preview */}
-      <div className="flex-1 p-4">
-        <div className="h-full border rounded-lg bg-white shadow-lg overflow-hidden">
-          <div className="h-8 bg-gray-200 flex items-center px-4 text-sm text-gray-600 border-b">
-            Preview - Tema: {activeTheme}
-          </div>
-          <div
-            ref={chatContainerRef}
-            className="relative h-full"
-            style={{
-              backgroundColor: currentTheme.colors.background,
-              fontFamily: currentTheme.typography.fontFamily,
-              fontSize: currentTheme.typography.fontSize,
-              color: currentTheme.colors.text,
-              padding: currentTheme.spacing.containerPadding
-            }}
-          >
-            {/* Menú */}
-            <div
-              ref={menuRef}
-              style={getMenuStyle()}
-              onMouseDown={handleMenuDragStart}
-              className={config.menuPosition.type === 'draggable' ? 'cursor-move' : ''}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <Menu size={16} style={{ color: currentTheme.colors.text }} />
-                <span style={{ color: currentTheme.colors.text, fontSize: '14px' }}>Menú</span>
-              </div>
-              <div className="space-y-1">
-                <div className="px-2 py-1 text-sm rounded" style={{ color: currentTheme.colors.textSecondary }}>
-                  Nueva conversación
-                </div>
-                <div className="px-2 py-1 text-sm rounded" style={{ color: currentTheme.colors.textSecondary }}>
-                  Historial
-                </div>
-                <div className="px-2 py-1 text-sm rounded" style={{ color: currentTheme.colors.textSecondary }}>
-                  Configuración
-                </div>
-              </div>
-            </div>
-
-            {/* Área de mensajes */}
-            <div
-              className="messages-area"
-              style={{
-                backgroundColor: currentTheme.colors.chatBackground,
-                border: `1px solid ${currentTheme.colors.border}`,
-                borderRadius: currentTheme.spacing.borderRadius,
-                padding: currentTheme.spacing.containerPadding,
-                height: 'calc(100% - 160px)',
-                overflowY: 'auto',
-                marginTop: config.menuPosition.position === 'top' ? '80px' : '20px',
-                marginBottom: '20px'
-              }}
-            >
-              {sampleMessages.map((message, index) => (
-                <div
-                  key={index}
-                  style={{
-                    display: 'flex',
-                    justifyContent: message.type === 'user' ? 'flex-end' : 'flex-start',
-                    margin: currentTheme.spacing.messageMargin
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: message.type === 'user'
-                        ? currentTheme.colors.userMessage
-                        : currentTheme.colors.aiMessage,
-                      color: message.type === 'user' ? 'white' : currentTheme.colors.text,
-                      padding: currentTheme.spacing.messagePadding,
-                      borderRadius: currentTheme.spacing.borderRadius,
-                      maxWidth: '80%',
-                      display: 'flex',
-                      alignItems: 'flex-start',
-                      gap: '8px'
-                    }}
-                  >
-                    {message.type === 'ai' && <Bot size={16} />}
-                    {message.type === 'user' && <User size={16} />}
-                    <span>{message.content}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Input de texto */}
-            <div
-              className="input-area flex gap-2"
-              style={{
-                position: 'absolute',
-                bottom: '20px',
-                left: currentTheme.spacing.containerPadding,
-                right: currentTheme.spacing.containerPadding
-              }}
-            >
-              <input
-                type="text"
-                placeholder="Escribe tu mensaje aquí..."
-                style={{
-                  width: config.textInput.width,
-                  height: config.textInput.height,
-                  padding: '12px 16px',
-                  border: `1px solid ${currentTheme.colors.border}`,
-                  borderRadius: currentTheme.spacing.borderRadius,
-                  backgroundColor: currentTheme.colors.chatBackground,
-                  color: currentTheme.colors.text,
-                  fontFamily: 'inherit',
-                  fontSize: 'inherit',
-                  outline: 'none'
-                }}
-              />
-              <button
-                style={{
-                  backgroundColor: currentTheme.colors.accent,
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: currentTheme.spacing.borderRadius,
-                  padding: '12px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                <Send size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Panel de Configuración */}
-      <div className="w-80 bg-white border-l overflow-y-auto">
-        <div className="p-4 border-b bg-gray-50">
-          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-            <Settings size={20} />
-            Configuración
-          </h2>
-        </div>
-
-        <div className="p-4 space-y-6">
-          {/* Selector de Tema */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tema Activo
-            </label>
-            <select
-              value={activeTheme}
-              onChange={(e) => setActiveTheme(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md"
-            >
-              {config.themes.map(theme => (
-                <option key={theme} value={theme}>{theme}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Configuración de Menú */}
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
-              <Layout size={16} />
-              Posición del Menú
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Tipo</label>
-                <select
-                  value={config.menuPosition.type}
-                  onChange={(e) => setConfig(prev => ({
-                    ...prev,
-                    menuPosition: { ...prev.menuPosition, type: e.target.value }
-                  }))}
-                  className="w-full p-2 text-sm border border-gray-300 rounded"
-                >
-                  <option value="fixed">Posición Fija</option>
-                  <option value="draggable">Arrastrable</option>
-                </select>
-              </div>
-
-              {config.menuPosition.type === 'fixed' && (
-                <div>
-                  <label className="block text-xs text-gray-600 mb-1">Posición</label>
-                  <select
-                    value={config.menuPosition.position}
-                    onChange={(e) => setConfig(prev => ({
-                      ...prev,
-                      menuPosition: { ...prev.menuPosition, position: e.target.value }
-                    }))}
-                    className="w-full p-2 text-sm border border-gray-300 rounded"
-                  >
-                    <option value="left">Izquierda</option>
-                    <option value="right">Derecha</option>
-                    <option value="top">Arriba</option>
-                    <option value="bottom">Abajo</option>
-                  </select>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Configuración del Input */}
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Campo de Texto</h3>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Ancho</label>
-                <input
-                  type="text"
-                  value={config.textInput.width}
-                  onChange={(e) => setConfig(prev => ({
-                    ...prev,
-                    textInput: { ...prev.textInput, width: e.target.value }
-                  }))}
-                  className="w-full p-2 text-sm border border-gray-300 rounded"
-                  placeholder="ej: 100%, 400px"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Alto</label>
-                <input
-                  type="text"
-                  value={config.textInput.height}
-                  onChange={(e) => setConfig(prev => ({
-                    ...prev,
-                    textInput: { ...prev.textInput, height: e.target.value }
-                  }))}
-                  className="w-full p-2 text-sm border border-gray-300 rounded"
-                  placeholder="ej: 50px, 3rem"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Configuración de Colores */}
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
-              <Palette size={16} />
-              Colores
-            </h3>
-            <div className="space-y-2">
-              {Object.entries(currentTheme.colors).map(([key, value]) => (
-                <div key={key} className="flex items-center gap-2">
-                  <input
-                    type="color"
-                    value={value}
-                    onChange={(e) => updateThemeConfig(activeTheme, `colors.${key}`, e.target.value)}
-                    className="w-8 h-8 rounded border"
-                  />
-                  <label className="text-xs text-gray-600 flex-1 capitalize">
-                    {key.replace(/([A-Z])/g, ' $1').trim()}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Configuración de Tipografía */}
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
-              <Type size={16} />
-              Tipografía
-            </h3>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Fuente</label>
-                <input
-                  type="text"
-                  value={currentTheme.typography.fontFamily}
-                  onChange={(e) => updateThemeConfig(activeTheme, 'typography.fontFamily', e.target.value)}
-                  className="w-full p-2 text-sm border border-gray-300 rounded"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-gray-600 mb-1">Tamaño</label>
-                <input
-                  type="text"
-                  value={currentTheme.typography.fontSize}
-                  onChange={(e) => updateThemeConfig(activeTheme, 'typography.fontSize', e.target.value)}
-                  className="w-full p-2 text-sm border border-gray-300 rounded"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Configuración de Espaciado */}
-          <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Espaciado</h3>
-            <div className="space-y-2">
-              {Object.entries(currentTheme.spacing).map(([key, value]) => (
-                <div key={key}>
-                  <label className="block text-xs text-gray-600 mb-1 capitalize">
-                    {key.replace(/([A-Z])/g, ' $1').trim()}
-                  </label>
-                  <input
-                    type="text"
-                    value={value}
-                    onChange={(e) => updateThemeConfig(activeTheme, `spacing.${key}`, e.target.value)}
-                    className="w-full p-2 text-sm border border-gray-300 rounded"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Botón de Exportar */}
-          <button
-            onClick={exportConfig}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-md flex items-center justify-center gap-2 font-medium"
-          >
-            <Download size={16} />
-            Exportar Configuración
-          </button>
-        </div>
-      </div>
+      <ChatPreview
+        config={config}
+        setConfig={setConfig}
+        currentTheme={currentTheme}
+        activeTheme={activeTheme}
+        sampleMessages={sampleMessages}
+      />
+      <ConfigPanel
+        config={config}
+        setConfig={setConfig}
+        activeTheme={activeTheme}
+        setActiveTheme={setActiveTheme}
+        currentTheme={currentTheme}
+        updateThemeConfig={updateThemeConfig}
+        exportConfig={exportConfig}
+      />
     </div>
   );
 };
