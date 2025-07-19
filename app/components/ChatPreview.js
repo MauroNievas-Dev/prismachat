@@ -69,14 +69,14 @@ const ChatPreview = ({
 
   const getMenuStyle = () => {
     const baseStyle = {
-      backgroundColor: currentTheme.colors.menuBackground,
-      border: `1px solid ${currentTheme.colors.border}`,
+      backgroundColor: (config.menuPosition.position === "top" || config.menuPosition.position === "bottom") ? "" : currentTheme.colors.menuBackground,
+      border: (config.menuPosition.position === "top" || config.menuPosition.position === "bottom") ? "" :`1px solid ${currentTheme.colors.border}`,
       borderRadius: currentTheme.spacing.borderRadius,
       padding: "16px",
       cursor: config.menuPosition.type === "draggable" ? "move" : "default",
       userSelect: "none",
       minWidth: "150px",
-      ...(config.menuPosition.position === "top" && {
+      ...((config.menuPosition.position === "top" || config.menuPosition.position === "bottom") && {
         display: "flex",
         gap: "8px",
         alignItems: "center",
@@ -119,7 +119,7 @@ const ChatPreview = ({
         return {
           ...baseStyle,
           position: "absolute",
-          top: "20px",
+          top: "10px",
           left: "50%",
           transform: "translateX(-50%)",
         };
@@ -174,7 +174,7 @@ const ChatPreview = ({
             </div>
             <div
               className={
-                config.menuPosition.position === "top" ? "flex gap-2" : "space-y-1"
+                config.menuPosition.position === "top" || config.menuPosition.position === "bottom" ? "flex gap-2" : "space-y-1"
               }
             >
               <div className="px-2 py-1 text-sm rounded" style={{ color: currentTheme.colors.textSecondary }}>
