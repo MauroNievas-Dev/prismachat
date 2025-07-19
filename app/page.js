@@ -43,6 +43,8 @@ const ChatFrontendGenerator = () => {
   background-color: ${theme.colors.background};
   color: ${theme.colors.text};
   padding: ${theme.spacing.containerPadding};
+  ${config.menuPosition.type === 'fixed' && config.menuPosition.position === 'left' ? `padding-left: calc(${theme.spacing.containerPadding} + 200px);` : ''}
+  ${config.menuPosition.type === 'fixed' && config.menuPosition.position === 'right' ? `padding-right: calc(${theme.spacing.containerPadding} + 200px);` : ''}
   height: 100vh;
   position: relative;
 }
@@ -101,8 +103,10 @@ const ChatFrontendGenerator = () => {
 
   const getMenuPositionCSS = () => {
     switch (config.menuPosition.position) {
-      case 'left': return 'position: fixed; left: 20px; top: 20px; width: 200px;';
-      case 'right': return 'position: fixed; right: 20px; top: 20px; width: 200px;';
+      case 'left':
+        return 'position: fixed; left: 0; top: 0; bottom: 0; width: 200px; height: 100vh;';
+      case 'right':
+        return 'position: fixed; right: 0; top: 0; bottom: 0; width: 200px; height: 100vh;';
       case 'top': return 'position: fixed; top: 20px; left: 50%; transform: translateX(-50%);';
       case 'bottom': return 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);';
       default: return 'position: fixed; left: 20px; top: 20px;';

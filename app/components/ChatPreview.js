@@ -15,6 +15,8 @@ const ChatPreview = ({
   const menuRef = useRef(null);
   const chatContainerRef = useRef(null);
 
+  const MENU_WIDTH = 200;
+
   const handleMenuDragStart = (e) => {
     if (config.menuPosition.type !== "draggable") return;
 
@@ -60,6 +62,11 @@ const ChatPreview = ({
     }
   }, [isDraggingMenu]);
 
+  const isFixedLeftRight =
+    config.menuPosition.type === "fixed" &&
+    (config.menuPosition.position === "left" ||
+      config.menuPosition.position === "right");
+
   const getMenuStyle = () => {
     const baseStyle = {
       backgroundColor: currentTheme.colors.menuBackground,
@@ -83,9 +90,25 @@ const ChatPreview = ({
 
     switch (config.menuPosition.position) {
       case "left":
-        return { ...baseStyle, position: "absolute", left: "20px", top: "20px" };
+        return {
+          ...baseStyle,
+          position: "absolute",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          height: "100%",
+          width: `${MENU_WIDTH}px`,
+        };
       case "right":
-        return { ...baseStyle, position: "absolute", right: "20px", top: "20px" };
+        return {
+          ...baseStyle,
+          position: "absolute",
+          right: 0,
+          top: 0,
+          bottom: 0,
+          height: "100%",
+          width: `${MENU_WIDTH}px`,
+        };
       case "top":
         return {
           ...baseStyle,
@@ -122,6 +145,14 @@ const ChatPreview = ({
             fontSize: currentTheme.typography.fontSize,
             color: currentTheme.colors.text,
             padding: currentTheme.spacing.containerPadding,
+            ...(isFixedLeftRight &&
+              config.menuPosition.position === "left" && {
+                paddingLeft: `calc(${currentTheme.spacing.containerPadding} + ${MENU_WIDTH}px)`,
+              }),
+            ...(isFixedLeftRight &&
+              config.menuPosition.position === "right" && {
+                paddingRight: `calc(${currentTheme.spacing.containerPadding} + ${MENU_WIDTH}px)`,
+              }),
           }}
         >
           {/* Menú */}
@@ -195,10 +226,16 @@ const ChatPreview = ({
           {/* Input de texto */}
           <div
             className="input-area flex gap-2"
-            style={{
-              left: currentTheme.spacing.containerPadding,
-              right: currentTheme.spacing.containerPadding,
-            }}
+          style={{
+            left:
+              isFixedLeftRight && config.menuPosition.position === "left"
+                ? `calc(${currentTheme.spacing.containerPadding} + ${MENU_WIDTH}px)`
+                : currentTheme.spacing.containerPadding,
+            right:
+              isFixedLeftRight && config.menuPosition.position === "right"
+                ? `calc(${currentTheme.spacing.containerPadding} + ${MENU_WIDTH}px)`
+                : currentTheme.spacing.containerPadding,
+          }}
           >
             <input
               type="text"
