@@ -12,6 +12,8 @@ const ChatMessages = ({ sampleMessages, currentTheme, config }) => {
         padding: currentTheme.spacing.containerPadding,
         marginTop: config.menuPosition.position === "top" ? "80px" : "20px",
         marginBottom: "20px",
+        '--scrollbar-track': currentTheme.colors.chatBackground,
+        '--scrollbar-thumb': currentTheme.colors.accent,
       }}
     >
       {sampleMessages.map((message, index) => (
