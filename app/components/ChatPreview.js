@@ -16,6 +16,7 @@ const ChatPreview = ({
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const menuRef = useRef(null);
   const chatContainerRef = useRef(null);
+  const [isCompact, setIsCompact] = useState(false);
 
   const MENU_WIDTH = 200;
 
@@ -64,6 +65,16 @@ const ChatPreview = ({
     }
   }, [isDraggingMenu]);
 
+  useEffect(() => {
+    if (!chatContainerRef.current || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(entries => {
+      const entry = entries[0];
+      setIsCompact(entry.contentRect.width < 500);
+    });
+    observer.observe(chatContainerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const isFixedLeftRight =
     config.menuPosition.type === "fixed" &&
     (config.menuPosition.position === "left" ||
@@ -86,6 +97,21 @@ const ChatPreview = ({
       }),
     };
 
+    if (isCompact) {
+      return {
+        ...baseStyle,
+        position: "absolute",
+        top: "10px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        display: "flex",
+        gap: "8px",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 10,
+      };
+    }
+
     if (config.menuPosition.type === "draggable") {
       return {
         ...baseStyle,
@@ -100,22 +126,25 @@ const ChatPreview = ({
       case "left":
         return {
           ...baseStyle,
-          position: "absolute",
-          left: 0,
-          top: 0,
-          bottom: 0,
-          height: "100%",
-          width: `${MENU_WIDTH}px`,
+          position: isCompact ? "absolute" : "absolute",
+          left: isCompact ? "50%" : 0,
+          top: isCompact ? "10px" : 0,
+          bottom: isCompact ? undefined : 0,
+          height: isCompact ? undefined : "100%",
+          width: isCompact ? undefined : `${MENU_WIDTH}px`,
+          transform: isCompact ? "translateX(-50%)" : undefined,
         };
       case "right":
         return {
           ...baseStyle,
-          position: "absolute",
-          right: 0,
-          top: 0,
-          bottom: 0,
-          height: "100%",
-          width: `${MENU_WIDTH}px`,
+          position: isCompact ? "absolute" : "absolute",
+          right: isCompact ? undefined : 0,
+          left: isCompact ? "50%" : undefined,
+          top: isCompact ? "10px" : 0,
+          bottom: isCompact ? undefined : 0,
+          height: isCompact ? undefined : "100%",
+          width: isCompact ? undefined : `${MENU_WIDTH}px`,
+          transform: isCompact ? "translateX(-50%)" : undefined,
         };
       case "top":
         return {
@@ -170,10 +199,12 @@ const ChatPreview = ({
             color: currentTheme.colors.text,
             padding: currentTheme.spacing.containerPadding,
             ...(isFixedLeftRight &&
+              !isCompact &&
               config.menuPosition.position === "left" && {
                 paddingLeft: `calc(${currentTheme.spacing.containerPadding} + ${MENU_WIDTH}px)`,
               }),
             ...(isFixedLeftRight &&
+              !isCompact &&
               config.menuPosition.position === "right" && {
                 paddingRight: `calc(${currentTheme.spacing.containerPadding} + ${MENU_WIDTH}px)`,
               }),
@@ -191,9 +222,10 @@ const ChatPreview = ({
             sampleMessages={sampleMessages}
             currentTheme={currentTheme}
             config={config}
+            isCompact={isCompact}
           />
 
-          <ChatInput config={config} currentTheme={currentTheme} />
+          <ChatInput config={config} currentTheme={currentTheme} isCompact={isCompact} />
         </div>
       </div>
     </div>
