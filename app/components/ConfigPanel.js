@@ -106,7 +106,7 @@ const ConfigPanel = ({
         <button
           type="button"
           onClick={addTheme}
-          className="mt-2 text-sm text-blue-600"
+          className="mt-2 px-3 py-1 text-sm rounded bg-blue-600 hover:bg-blue-700 text-white"
         >
           Nuevo Tema
         </button>
@@ -114,7 +114,7 @@ const ConfigPanel = ({
           <button
             type="button"
             onClick={deleteTheme}
-            className="mt-2 ml-2 text-sm text-red-600"
+            className="mt-2 ml-2 px-3 py-1 text-sm rounded bg-red-600 hover:bg-red-700 text-white"
           >
             Eliminar Tema
           </button>
