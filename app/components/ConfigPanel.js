@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { Download, Palette, Type, Layout, Settings } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Download, Palette, Type, Layout, Settings, GripVertical } from "lucide-react";
 import Modal from "./Modal";
 import defaultConfig from "../../config/chatConfig.json" assert { type: "json" };
 
@@ -18,6 +18,10 @@ const ConfigPanel = ({
   const [themeError, setThemeError] = useState("");
   const defaultThemes = defaultConfig.themes;
   const [showDeleteThemeModal, setShowDeleteThemeModal] = useState(false);
+  const [panelWidth, setPanelWidth] = useState(320);
+  const [isResizing, setIsResizing] = useState(false);
+  const startXRef = useRef(0);
+  const startWidthRef = useRef(320);
 
   const addTheme = () => {
     setThemeError("");
@@ -65,6 +69,33 @@ const ConfigPanel = ({
     setShowDeleteThemeModal(false);
   };
 
+  const handleResizeStart = (e) => {
+    setIsResizing(true);
+    startXRef.current = e.clientX;
+    startWidthRef.current = panelWidth;
+  };
+
+  const handleResize = (e) => {
+    const delta = startXRef.current - e.clientX;
+    setPanelWidth(Math.max(200, startWidthRef.current + delta));
+  };
+
+  const handleResizeEnd = () => {
+    setIsResizing(false);
+  };
+
+  useEffect(() => {
+    if (!isResizing) return;
+    const onMove = (e) => handleResize(e);
+    const onUp = () => handleResizeEnd();
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+    return () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+    };
+  }, [isResizing]);
+
   useEffect(() => {
     document.documentElement.style.setProperty("--scrollbar-thumb",currentTheme.colors.chatBackground);
     document.documentElement.style.setProperty("--scrollbar-track",currentTheme.colors.userMessage);
@@ -73,13 +104,26 @@ const ConfigPanel = ({
   return (
     <>
       <div
-        className="w-80 border-l overflow-y-auto"
+        className="relative border-l overflow-y-auto"
         style={{
           backgroundColor: currentTheme.colors.chatBackground,
           color: currentTheme.colors.text,
           borderColor: currentTheme.colors.border,
+          width: `${panelWidth}px`,
         }}
       >
+        <div
+          className="absolute left-0 top-0 bottom-0 w-1 cursor-ew-resize"
+          onMouseDown={handleResizeStart}
+          style={{ backgroundColor: currentTheme.colors.border }}
+        />
+        <div
+          className="absolute -left-3 top-1/2 -translate-y-1/2 cursor-ew-resize"
+          onMouseDown={handleResizeStart}
+          style={{ color: currentTheme.colors.border }}
+        >
+          <GripVertical size={16} />
+        </div>
         <div
           className="p-4 border-b"
           style={{
