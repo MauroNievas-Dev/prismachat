@@ -85,35 +85,20 @@ const ChatPreview = ({
 
   const getMenuStyle = () => {
     const baseStyle = {
-      backgroundColor: (config.menuPosition.position === "top" || config.menuPosition.position === "bottom") ? "" : currentTheme.colors.menuBackground,
-      border: (config.menuPosition.position === "top" || config.menuPosition.position === "bottom") ? "" :`1px solid ${currentTheme.colors.border}`,
+      backgroundColor: (config.menuPosition.position === "top" || config.menuPosition.position === "bottom" || isCompact) ? "" : currentTheme.colors.menuBackground,
+      border: (config.menuPosition.position === "top" || config.menuPosition.position === "bottom" || isCompact) ? "" :`1px solid ${currentTheme.colors.border}`,
       borderRadius: currentTheme.spacing.borderRadius,
       padding: "16px",
       cursor: config.menuPosition.type === "draggable" ? "move" : "default",
       userSelect: "none",
       minWidth: "150px",
-      ...((config.menuPosition.position === "top" || config.menuPosition.position === "bottom") && {
+      ...((config.menuPosition.position === "top" || config.menuPosition.position === "bottom" || isCompact) && {
         display: "flex",
         gap: "8px",
         alignItems: "center",
         justifyContent: "center",
       }),
     };
-
-    if (isCompact) {
-      return {
-        ...baseStyle,
-        position: "absolute",
-        top: "10px",
-        left: "50%",
-        transform: "translateX(-50%)",
-        display: "flex",
-        gap: "8px",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 10,
-      };
-    }
 
     if (config.menuPosition.type === "draggable") {
       return {
@@ -174,9 +159,13 @@ const ChatPreview = ({
     <div className="flex-1 p-0"   style={{
           backgroundColor: currentTheme.colors.chatBackground,
           borderColor: currentTheme.colors.border,
-        }}>
+        }}
+
+        >
       <div
         className="h-full border rounded-lg shadow-lg overflow-hidden"
+          ref={chatContainerRef}
+
         style={{
           backgroundColor: currentTheme.colors.chatBackground,
           borderColor: currentTheme.colors.border,
@@ -193,7 +182,6 @@ const ChatPreview = ({
           Preview - Tema: {activeTheme}
         </div>
         <div
-          ref={chatContainerRef}
           className="relative h-full"
           style={{
             backgroundColor: currentTheme.colors.background,
@@ -219,6 +207,7 @@ const ChatPreview = ({
             onMouseDown={handleMenuDragStart}
             config={config}
             currentTheme={currentTheme}
+            isCompact={isCompact}
           />
 
           <ChatMessages
