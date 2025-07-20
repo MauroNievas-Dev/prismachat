@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Download, Palette, Type, Layout, Settings } from "lucide-react";
 import Modal from "./Modal";
 import defaultConfig from "../../config/chatConfig.json" assert { type: "json" };
@@ -64,6 +64,12 @@ const ConfigPanel = ({
     setActiveTheme(remainingThemes[0] || defaultThemes[0]);
     setShowDeleteThemeModal(false);
   };
+
+  useEffect(() => {
+    document.documentElement.style.setProperty("--scrollbar-thumb",currentTheme.colors.chatBackground);
+    document.documentElement.style.setProperty("--scrollbar-track",currentTheme.colors.userMessage);
+  });
+
   return (
     <>
       <div
