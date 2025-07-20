@@ -212,8 +212,8 @@ const ChatPreview = ({
                   gap: "4px",
                 }}
               >
-                {message.type === "user" && (
-                  <User size={16} style={{ marginRight: "4px" }} />
+                {message.type === "ai" && (
+                  <Bot size={30} style={{ marginLeft: "4px" }} />
                 )}
                 <div
                   style={{
@@ -229,9 +229,10 @@ const ChatPreview = ({
                 >
                   <span>{message.content}</span>
                 </div>
-                {message.type === "ai" && (
-                  <Bot size={16} style={{ marginLeft: "4px" }} />
+                {message.type === "user" && (
+                  <User size={30} style={{ marginRight: "4px" }} />
                 )}
+
               </div>
             ))}
           </div>
@@ -248,7 +249,7 @@ const ChatPreview = ({
               isFixedLeftRight && config.menuPosition.position === "right"
                 ? `calc(${currentTheme.spacing.containerPadding} + ${MENU_WIDTH}px)`
                 : currentTheme.spacing.containerPadding,
-            bottom: config.menuPosition.position === "bottom" ? "80px" : "20px",
+            bottom: config.menuPosition.position === "bottom" ? "85px" : "40px",
           }}
           >
             <input
