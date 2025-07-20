@@ -137,7 +137,10 @@ const ChatPreview = ({
   };
 
   return (
-    <div className="flex-1 p-4">
+    <div className="flex-1 p-0"   style={{
+          backgroundColor: currentTheme.colors.chatBackground,
+          borderColor: currentTheme.colors.border,
+        }}>
       <div
         className="h-full border rounded-lg shadow-lg overflow-hidden"
         style={{

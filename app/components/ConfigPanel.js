@@ -218,7 +218,7 @@ const ConfigPanel = ({
                   type="color"
                   value={value}
                   onChange={(e) => updateThemeConfig(activeTheme, `colors.${key}`, e.target.value)}
-                  className="w-8 h-8 rounded border"
+                  className="w-10 h-10 rounded"
                 />
                 <label className="text-xs flex-1 capitalize">
                   {key.replace(/([A-Z])/g, " $1").trim()}
