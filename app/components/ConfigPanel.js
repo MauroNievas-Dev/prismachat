@@ -11,6 +11,24 @@ const ConfigPanel = ({
   updateThemeConfig,
   exportConfig,
 }) => {
+  const addTheme = () => {
+    const name = prompt("Nombre del nuevo tema");
+    if (!name) return;
+    if (config.themes.includes(name)) {
+      alert("El tema ya existe");
+      return;
+    }
+    const baseTheme = config.themeConfigs[activeTheme];
+    setConfig((prev) => ({
+      ...prev,
+      themes: [...prev.themes, name],
+      themeConfigs: {
+        ...prev.themeConfigs,
+        [name]: JSON.parse(JSON.stringify(baseTheme)),
+      },
+    }));
+    setActiveTheme(name);
+  };
   return (
     <div className="w-80 bg-white border-l overflow-y-auto">
       <div className="p-4 border-b bg-gray-50">
@@ -24,18 +42,25 @@ const ConfigPanel = ({
         {/* Selector de Tema */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Tema Activo</label>
-          <select
-            value={activeTheme}
-            onChange={(e) => setActiveTheme(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md"
-          >
-            {config.themes.map((theme) => (
-              <option key={theme} value={theme}>
-                {theme}
-              </option>
-            ))}
-          </select>
-        </div>
+        <select
+          value={activeTheme}
+          onChange={(e) => setActiveTheme(e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md"
+        >
+          {config.themes.map((theme) => (
+            <option key={theme} value={theme}>
+              {theme}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          onClick={addTheme}
+          className="mt-2 text-sm text-blue-600"
+        >
+          Nuevo Tema
+        </button>
+      </div>
 
         {/* Configuración de Menú */}
         <div>
