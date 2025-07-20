@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Download, Palette, Type, Layout, Settings } from "lucide-react";
 import Modal from "./Modal";
+import defaultConfig from "../../config/chatConfig.json" assert { type: "json" };
 
 const ConfigPanel = ({
   config,
@@ -15,6 +16,8 @@ const ConfigPanel = ({
   const [showAddThemeModal, setShowAddThemeModal] = useState(false);
   const [newThemeName, setNewThemeName] = useState("");
   const [themeError, setThemeError] = useState("");
+  const defaultThemes = defaultConfig.themes;
+  const [showDeleteThemeModal, setShowDeleteThemeModal] = useState(false);
 
   const addTheme = () => {
     setThemeError("");
@@ -43,6 +46,23 @@ const ConfigPanel = ({
     setActiveTheme(name);
     setNewThemeName("");
     setShowAddThemeModal(false);
+  };
+
+  const deleteTheme = () => {
+    setShowDeleteThemeModal(true);
+  };
+
+  const confirmDeleteTheme = () => {
+    const themeName = activeTheme;
+    const remainingThemes = config.themes.filter((t) => t !== themeName);
+    const { [themeName]: _removed, ...remainingConfigs } = config.themeConfigs;
+    setConfig((prev) => ({
+      ...prev,
+      themes: remainingThemes,
+      themeConfigs: remainingConfigs,
+    }));
+    setActiveTheme(remainingThemes[0] || defaultThemes[0]);
+    setShowDeleteThemeModal(false);
   };
   return (
     <>
@@ -90,6 +110,15 @@ const ConfigPanel = ({
         >
           Nuevo Tema
         </button>
+        {!defaultThemes.includes(activeTheme) && (
+          <button
+            type="button"
+            onClick={deleteTheme}
+            className="mt-2 ml-2 text-sm text-red-600"
+          >
+            Eliminar Tema
+          </button>
+        )}
       </div>
 
         {/* Configuración de Menú */}
@@ -284,6 +313,30 @@ const ConfigPanel = ({
               onClick={confirmAddTheme}
             >
               Guardar
+            </button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={showDeleteThemeModal}
+        title={`Eliminar Tema`}
+        onClose={() => setShowDeleteThemeModal(false)}
+        currentTheme={currentTheme}
+      >
+        <div className="space-y-4">
+          <p>¿Estás seguro de que deseas eliminar el tema &quot;{activeTheme}&quot;?</p>
+          <div className="flex justify-end gap-2">
+            <button
+              className="px-4 py-2 text-sm border rounded"
+              onClick={() => setShowDeleteThemeModal(false)}
+            >
+              Cancelar
+            </button>
+            <button
+              className="px-4 py-2 text-sm bg-red-600 text-white rounded"
+              onClick={confirmDeleteTheme}
+            >
+              Eliminar
             </button>
           </div>
         </div>
