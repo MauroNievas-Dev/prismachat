@@ -138,8 +138,21 @@ const ChatPreview = ({
 
   return (
     <div className="flex-1 p-4">
-      <div className="h-full border rounded-lg bg-white shadow-lg overflow-hidden">
-        <div className="h-8 bg-gray-200 flex items-center px-4 text-sm text-gray-600 border-b">
+      <div
+        className="h-full border rounded-lg shadow-lg overflow-hidden"
+        style={{
+          backgroundColor: currentTheme.colors.chatBackground,
+          borderColor: currentTheme.colors.border,
+        }}
+      >
+        <div
+          className="h-8 flex items-center px-4 text-sm border-b"
+          style={{
+            backgroundColor: currentTheme.colors.background,
+            color: currentTheme.colors.text,
+            borderColor: currentTheme.colors.border,
+          }}
+        >
           Preview - Tema: {activeTheme}
         </div>
         <div

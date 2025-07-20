@@ -48,13 +48,21 @@ const ConfigPanel = ({
     <>
       <div
         className="w-80 border-l overflow-y-auto"
-        style={{ backgroundColor: currentTheme.colors.chatBackground }}
+        style={{
+          backgroundColor: currentTheme.colors.chatBackground,
+          color: currentTheme.colors.text,
+          borderColor: currentTheme.colors.border,
+        }}
       >
         <div
           className="p-4 border-b"
-          style={{ backgroundColor: currentTheme.colors.background }}
+          style={{
+            backgroundColor: currentTheme.colors.background,
+            color: currentTheme.colors.text,
+            borderColor: currentTheme.colors.border,
+          }}
         >
-          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
             <Settings size={20} />
             Configuración
           </h2>
@@ -63,7 +71,7 @@ const ConfigPanel = ({
       <div className="p-4 space-y-6">
         {/* Selector de Tema */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Tema Activo</label>
+          <label className="block text-sm font-medium mb-2">Tema Activo</label>
         <select
           value={activeTheme}
           onChange={(e) => setActiveTheme(e.target.value)}
@@ -86,13 +94,13 @@ const ConfigPanel = ({
 
         {/* Configuración de Menú */}
         <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+          <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
             <Layout size={16} />
             Posición del Menú
           </h3>
           <div className="space-y-3">
             <div>
-              <label className="block text-xs text-gray-600 mb-1">Tipo</label>
+              <label className="block text-xs mb-1">Tipo</label>
               <select
                 value={config.menuPosition.type}
                 onChange={(e) =>
@@ -110,7 +118,7 @@ const ConfigPanel = ({
 
             {config.menuPosition.type === "fixed" && (
               <div>
-                <label className="block text-xs text-gray-600 mb-1">Posición</label>
+                <label className="block text-xs mb-1">Posición</label>
                 <select
                   value={config.menuPosition.position}
                   onChange={(e) =>
@@ -133,10 +141,10 @@ const ConfigPanel = ({
 
         {/* Configuración del Input */}
         <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Campo de Texto</h3>
+          <h3 className="text-sm font-medium mb-3">Campo de Texto</h3>
           <div className="space-y-3">
             <div>
-              <label className="block text-xs text-gray-600 mb-1">Ancho</label>
+              <label className="block text-xs mb-1">Ancho</label>
               <input
                 type="text"
                 value={config.textInput.width}
@@ -151,7 +159,7 @@ const ConfigPanel = ({
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-600 mb-1">Alto</label>
+              <label className="block text-xs mb-1">Alto</label>
               <input
                 type="text"
                 value={config.textInput.height}
@@ -170,7 +178,7 @@ const ConfigPanel = ({
 
         {/* Configuración de Colores */}
         <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+          <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
             <Palette size={16} />
             Colores
           </h3>
@@ -183,7 +191,7 @@ const ConfigPanel = ({
                   onChange={(e) => updateThemeConfig(activeTheme, `colors.${key}`, e.target.value)}
                   className="w-8 h-8 rounded border"
                 />
-                <label className="text-xs text-gray-600 flex-1 capitalize">
+                <label className="text-xs flex-1 capitalize">
                   {key.replace(/([A-Z])/g, " $1").trim()}
                 </label>
               </div>
@@ -193,13 +201,13 @@ const ConfigPanel = ({
 
         {/* Configuración de Tipografía */}
         <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+          <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
             <Type size={16} />
             Tipografía
           </h3>
           <div className="space-y-3">
             <div>
-              <label className="block text-xs text-gray-600 mb-1">Fuente</label>
+              <label className="block text-xs mb-1">Fuente</label>
               <input
                 type="text"
                 value={currentTheme.typography.fontFamily}
@@ -208,7 +216,7 @@ const ConfigPanel = ({
               />
             </div>
             <div>
-              <label className="block text-xs text-gray-600 mb-1">Tamaño</label>
+              <label className="block text-xs mb-1">Tamaño</label>
               <input
                 type="text"
                 value={currentTheme.typography.fontSize}
@@ -221,11 +229,11 @@ const ConfigPanel = ({
 
         {/* Configuración de Espaciado */}
         <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Espaciado</h3>
+          <h3 className="text-sm font-medium mb-3">Espaciado</h3>
           <div className="space-y-2">
             {Object.entries(currentTheme.spacing).map(([key, value]) => (
               <div key={key}>
-                <label className="block text-xs text-gray-600 mb-1 capitalize">
+                <label className="block text-xs mb-1 capitalize">
                   {key.replace(/([A-Z])/g, " $1").trim()}
                 </label>
                 <input
