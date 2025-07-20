@@ -240,17 +240,11 @@ const ChatPreview = ({
           {/* Input de texto */}
           <div
             className="input-area flex gap-2"
-          style={{
-            left:
-              isFixedLeftRight && config.menuPosition.position === "left"
-                ? `calc(${currentTheme.spacing.containerPadding} + ${MENU_WIDTH}px)`
-                : currentTheme.spacing.containerPadding,
-            right:
-              isFixedLeftRight && config.menuPosition.position === "right"
-                ? `calc(${currentTheme.spacing.containerPadding} + ${MENU_WIDTH}px)`
-                : currentTheme.spacing.containerPadding,
-            bottom: config.menuPosition.position === "bottom" ? "85px" : "40px",
-          }}
+            style={{
+              bottom: config.menuPosition.position === "bottom" ? "85px" : "40px",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
           >
             <input
               type="text"

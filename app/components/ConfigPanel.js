@@ -1,6 +1,7 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Download, Palette, Type, Layout, Settings } from "lucide-react";
+import Modal from "./Modal";
 
 const ConfigPanel = ({
   config,
@@ -11,11 +12,23 @@ const ConfigPanel = ({
   updateThemeConfig,
   exportConfig,
 }) => {
+  const [showAddThemeModal, setShowAddThemeModal] = useState(false);
+  const [newThemeName, setNewThemeName] = useState("");
+  const [themeError, setThemeError] = useState("");
+
   const addTheme = () => {
-    const name = prompt("Nombre del nuevo tema");
-    if (!name) return;
+    setThemeError("");
+    setShowAddThemeModal(true);
+  };
+
+  const confirmAddTheme = () => {
+    const name = newThemeName.trim();
+    if (!name) {
+      setThemeError("Debe ingresar un nombre");
+      return;
+    }
     if (config.themes.includes(name)) {
-      alert("El tema ya existe");
+      setThemeError("El tema ya existe");
       return;
     }
     const baseTheme = config.themeConfigs[activeTheme];
@@ -28,15 +41,24 @@ const ConfigPanel = ({
       },
     }));
     setActiveTheme(name);
+    setNewThemeName("");
+    setShowAddThemeModal(false);
   };
   return (
-    <div className="w-80 bg-white border-l overflow-y-auto">
-      <div className="p-4 border-b bg-gray-50">
-        <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-          <Settings size={20} />
-          Configuración
-        </h2>
-      </div>
+    <>
+      <div
+        className="w-80 border-l overflow-y-auto"
+        style={{ backgroundColor: currentTheme.colors.chatBackground }}
+      >
+        <div
+          className="p-4 border-b"
+          style={{ backgroundColor: currentTheme.colors.background }}
+        >
+          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <Settings size={20} />
+            Configuración
+          </h2>
+        </div>
 
       <div className="p-4 space-y-6">
         {/* Selector de Tema */}
@@ -226,7 +248,39 @@ const ConfigPanel = ({
           Exportar Configuración
         </button>
       </div>
-    </div>
+      </div>
+      <Modal
+        isOpen={showAddThemeModal}
+        title="Nuevo Tema"
+        onClose={() => setShowAddThemeModal(false)}
+        currentTheme={currentTheme}
+      >
+        <div className="space-y-4">
+          <input
+            type="text"
+            value={newThemeName}
+            onChange={(e) => setNewThemeName(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+            placeholder="Nombre del tema"
+          />
+          {themeError && <p className="text-sm text-red-600">{themeError}</p>}
+          <div className="flex justify-end gap-2">
+            <button
+              className="px-4 py-2 text-sm border rounded"
+              onClick={() => setShowAddThemeModal(false)}
+            >
+              Cancelar
+            </button>
+            <button
+              className="px-4 py-2 text-sm bg-blue-600 text-white rounded"
+              onClick={confirmAddTheme}
+            >
+              Guardar
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 };
 
