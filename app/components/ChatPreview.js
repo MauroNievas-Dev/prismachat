@@ -127,7 +127,7 @@ const ChatPreview = ({
         return {
           ...baseStyle,
           position: "absolute",
-          bottom: "80px",
+          bottom: "20px",
           left: "50%",
           transform: "translateX(-50%)",
         };
@@ -208,8 +208,13 @@ const ChatPreview = ({
                   display: "flex",
                   justifyContent: message.type === "user" ? "flex-end" : "flex-start",
                   margin: currentTheme.spacing.messageMargin,
+                  alignItems: "flex-end",
+                  gap: "4px",
                 }}
               >
+                {message.type === "user" && (
+                  <User size={16} style={{ marginRight: "4px" }} />
+                )}
                 <div
                   style={{
                     backgroundColor:
@@ -220,15 +225,13 @@ const ChatPreview = ({
                     padding: currentTheme.spacing.messagePadding,
                     borderRadius: currentTheme.spacing.borderRadius,
                     maxWidth: "80%",
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: "8px",
                   }}
                 >
-                  {message.type === "ai" && <Bot size={16} />}
-                  {message.type === "user" && <User size={16} />}
                   <span>{message.content}</span>
                 </div>
+                {message.type === "ai" && (
+                  <Bot size={16} style={{ marginLeft: "4px" }} />
+                )}
               </div>
             ))}
           </div>
@@ -245,6 +248,7 @@ const ChatPreview = ({
               isFixedLeftRight && config.menuPosition.position === "right"
                 ? `calc(${currentTheme.spacing.containerPadding} + ${MENU_WIDTH}px)`
                 : currentTheme.spacing.containerPadding,
+            bottom: config.menuPosition.position === "bottom" ? "80px" : "20px",
           }}
           >
             <input

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ChatPreview from './components/ChatPreview';
 import ConfigPanel from './components/ConfigPanel';
 import initialConfig from '../config/chatConfig.json' assert { type: 'json' };
@@ -14,6 +14,21 @@ const ChatFrontendGenerator = () => {
     { type: 'user', content: 'Me gustaría saber más sobre inteligencia artificial' },
     { type: 'ai', content: 'La inteligencia artificial es un campo fascinante que abarca muchas áreas, desde el machine learning hasta el procesamiento de lenguaje natural. ¿Hay algún aspecto específico que te interese más?' }
   ]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('chat-config');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setConfig(parsed);
+        setActiveTheme(parsed.defaultTheme);
+      } catch (e) {}
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('chat-config', JSON.stringify(config));
+  }, [config]);
 
   const currentTheme = config.themeConfigs[activeTheme];
 
