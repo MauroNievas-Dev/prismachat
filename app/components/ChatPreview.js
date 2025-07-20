@@ -1,6 +1,8 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-import { Menu, Send, User, Bot } from "lucide-react";
+import ChatMenu from "./ChatMenu";
+import ChatMessages from "./ChatMessages";
+import ChatInput from "./ChatInput";
 import "./ChatPreview.css";
 
 const ChatPreview = ({
@@ -177,123 +179,21 @@ const ChatPreview = ({
               }),
           }}
         >
-          {/* Menú */}
-          <div
-            ref={menuRef}
+          <ChatMenu
+            menuRef={menuRef}
             style={getMenuStyle()}
             onMouseDown={handleMenuDragStart}
-            className={config.menuPosition.type === "draggable" ? "cursor-move" : ""}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <Menu size={16} style={{ color: currentTheme.colors.text }} />
-              <span style={{ color: currentTheme.colors.text, fontSize: "14px" }}>Menú</span>
-            </div>
-            <div
-              className={
-                config.menuPosition.position === "top" || config.menuPosition.position === "bottom" ? "flex gap-2" : "space-y-1"
-              }
-            >
-              <div className="px-2 py-1 text-sm rounded" style={{ color: currentTheme.colors.textSecondary }}>
-                Nueva conversación
-              </div>
-              <div className="px-2 py-1 text-sm rounded" style={{ color: currentTheme.colors.textSecondary }}>
-                Historial
-              </div>
-              <div className="px-2 py-1 text-sm rounded" style={{ color: currentTheme.colors.textSecondary }}>
-                Configuración
-              </div>
-            </div>
-          </div>
+            config={config}
+            currentTheme={currentTheme}
+          />
 
-          {/* Área de mensajes */}
-          <div
-            className="messages-area"
-            style={{
-              backgroundColor: currentTheme.colors.chatBackground,
-              border: `1px solid ${currentTheme.colors.border}`,
-              borderRadius: currentTheme.spacing.borderRadius,
-              padding: currentTheme.spacing.containerPadding,
-              marginTop: config.menuPosition.position === "top" ? "80px" : "20px",
-              marginBottom: "20px",
-            }}
-          >
-            {sampleMessages.map((message, index) => (
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  justifyContent: message.type === "user" ? "flex-end" : "flex-start",
-                  margin: currentTheme.spacing.messageMargin,
-                  alignItems: "flex-end",
-                  gap: "4px",
-                }}
-              >
-                {message.type === "ai" && (
-                  <Bot size={30} style={{ marginLeft: "4px" }} />
-                )}
-                <div
-                  style={{
-                    backgroundColor:
-                      message.type === "user"
-                        ? currentTheme.colors.userMessage
-                        : currentTheme.colors.aiMessage,
-                    color: message.type === "user" ? "white" : currentTheme.colors.text,
-                    padding: currentTheme.spacing.messagePadding,
-                    borderRadius: currentTheme.spacing.borderRadius,
-                    maxWidth: "80%",
-                  }}
-                >
-                  <span>{message.content}</span>
-                </div>
-                {message.type === "user" && (
-                  <User size={30} style={{ marginRight: "4px" }} />
-                )}
+          <ChatMessages
+            sampleMessages={sampleMessages}
+            currentTheme={currentTheme}
+            config={config}
+          />
 
-              </div>
-            ))}
-          </div>
-
-          {/* Input de texto */}
-          <div
-            className="input-area flex gap-2"
-            style={{
-              bottom: config.menuPosition.position === "bottom" ? "85px" : "40px",
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Escribe tu mensaje aquí..."
-              style={{
-                width: config.textInput.width,
-                height: config.textInput.height,
-                padding: "12px 16px",
-                border: `1px solid ${currentTheme.colors.border}`,
-                borderRadius: currentTheme.spacing.borderRadius,
-                backgroundColor: currentTheme.colors.chatBackground,
-                color: currentTheme.colors.text,
-                fontFamily: "inherit",
-                fontSize: "inherit",
-                outline: "none",
-              }}
-            />
-            <button
-              style={{
-                backgroundColor: currentTheme.colors.accent,
-                color: "white",
-                border: "none",
-                borderRadius: currentTheme.spacing.borderRadius,
-                padding: "12px",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Send size={16} />
-            </button>
-          </div>
+          <ChatInput config={config} currentTheme={currentTheme} />
         </div>
       </div>
     </div>
