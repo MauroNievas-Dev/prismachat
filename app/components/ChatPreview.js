@@ -21,6 +21,11 @@ const ChatPreview = ({
   const MENU_WIDTH = 200;
   const COMPACT_WIDTH = 500;
 
+  const isFixedLeftRight =
+    config.menuPosition.type === "fixed" &&
+    (config.menuPosition.position === "left" ||
+      config.menuPosition.position === "right");
+
   const handleMenuDragStart = (e) => {
     if (config.menuPosition.type !== "draggable") return;
 
@@ -67,18 +72,16 @@ const ChatPreview = ({
   }, [isDraggingMenu]);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsCompact(window.innerWidth < COMPACT_WIDTH);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const isFixedLeftRight =
-    config.menuPosition.type === "fixed" &&
-    (config.menuPosition.position === "left" ||
-      config.menuPosition.position === "right");
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0].contentRect.width;
+      const usableWidth = width - (isFixedLeftRight ? MENU_WIDTH : 0);
+      setIsCompact(usableWidth < COMPACT_WIDTH);
+    });
+    if (chatContainerRef.current) {
+      observer.observe(chatContainerRef.current);
+    }
+    return () => observer.disconnect();
+  }, [isFixedLeftRight]);
 
   const getMenuStyle = () => {
     const baseStyle = {
