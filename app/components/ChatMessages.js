@@ -1,7 +1,7 @@
 import React from "react";
 import { User, Bot } from "lucide-react";
 
-const ChatMessages = ({ sampleMessages, currentTheme, config }) => {
+const ChatMessages = ({ sampleMessages, currentTheme, config, isCompact }) => {
   return (
     <div
       className="messages-area"
@@ -10,8 +10,9 @@ const ChatMessages = ({ sampleMessages, currentTheme, config }) => {
         border: `1px solid ${currentTheme.colors.border}`,
         borderRadius: currentTheme.spacing.borderRadius,
         padding: currentTheme.spacing.containerPadding,
-        marginTop: config.menuPosition.position === "top" ? "80px" : "20px",
-        marginBottom: "20px",
+        marginTop:
+          config.menuPosition.position === "top" || isCompact ? "80px" : "20px",
+        marginBottom: "10px",
         '--scrollbar-track': currentTheme.colors.chatBackground,
         '--scrollbar-thumb': currentTheme.colors.accent,
       }}

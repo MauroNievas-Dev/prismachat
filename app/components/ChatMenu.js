@@ -7,6 +7,7 @@ const ChatMenu = ({
   onMouseDown,
   config,
   currentTheme,
+  isCompact
 }) => {
   return (
     <div
@@ -21,7 +22,7 @@ const ChatMenu = ({
       </div>
       <div
         className={
-          config.menuPosition.position === "top" || config.menuPosition.position === "bottom"
+          config.menuPosition.position === "top" || config.menuPosition.position === "bottom" || isCompact
             ? "flex gap-2"
             : "space-y-1"
         }

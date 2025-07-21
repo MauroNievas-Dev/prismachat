@@ -12,7 +12,19 @@ const ChatFrontendGenerator = () => {
     { type: 'user', content: 'Hola, ¿cómo estás?' },
     { type: 'ai', content: '¡Hola! Estoy muy bien, gracias por preguntar. ¿En qué puedo ayudarte hoy?' },
     { type: 'user', content: 'Me gustaría saber más sobre inteligencia artificial' },
-    { type: 'ai', content: 'La inteligencia artificial es un campo fascinante que abarca muchas áreas, desde el machine learning hasta el procesamiento de lenguaje natural. ¿Hay algún aspecto específico que te interese más?' }
+    { type: 'ai', content: 'La inteligencia artificial es un campo fascinante que abarca muchas áreas, desde el machine learning hasta el procesamiento de lenguaje natural. ¿Hay algún aspecto específico que te interese más?' },
+      { type: 'user', content: 'Hola, ¿cómo estás?' },
+    { type: 'ai', content: '¡Hola! Estoy muy bien, gracias por preguntar. ¿En qué puedo ayudarte hoy?' },
+    { type: 'user', content: 'Me gustaría saber más sobre inteligencia artificial' },
+    { type: 'ai', content: 'La inteligencia artificial es un campo fascinante que abarca muchas áreas, desde el machine learning hasta el procesamiento de lenguaje natural. ¿Hay algún aspecto específico que te interese más?' },
+      { type: 'user', content: 'Hola, ¿cómo estás?' },
+    { type: 'ai', content: '¡Hola! Estoy muy bien, gracias por preguntar. ¿En qué puedo ayudarte hoy?' },
+    { type: 'user', content: 'Me gustaría saber más sobre inteligencia artificial' },
+    { type: 'ai', content: 'La inteligencia artificial es un campo fascinante que abarca muchas áreas, desde el machine learning hasta el procesamiento de lenguaje natural. ¿Hay algún aspecto específico que te interese más?' },
+      { type: 'user', content: 'Hola, ¿cómo estás?' },
+    { type: 'ai', content: '¡Hola! Estoy muy bien, gracias por preguntar. ¿En qué puedo ayudarte hoy?' },
+    { type: 'user', content: 'Me gustaría saber más sobre inteligencia artificial' },
+    { type: 'ai', content: 'La inteligencia artificial es un campo fascinante que abarca muchas áreas, desde el machine learning hasta el procesamiento de lenguaje natural. ¿Hay algún aspecto específico que te interese más?' },
   ]);
 
   useEffect(() => {

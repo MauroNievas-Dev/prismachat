@@ -1,14 +1,13 @@
 import React from "react";
 import { Send } from "lucide-react";
 
-const ChatInput = ({ config, currentTheme }) => {
+const ChatInput = ({ config, currentTheme, isCompact }) => {
   return (
     <div
-      className="input-area flex gap-2"
+      className="input-area flex gap-2 mx-auto items-center place-content-between"
       style={{
-        bottom: config.menuPosition.position === "bottom" ? "85px" : "40px",
-        left: "50%",
-        transform: "translateX(-50%)",
+        bottom:
+          config.menuPosition.position === "bottom" && !isCompact ? "85px" : "40px",
       }}
     >
       <input
