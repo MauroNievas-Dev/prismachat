@@ -19,7 +19,7 @@ const ChatPreview = ({
   const [isCompact, setIsCompact] = useState(false);
 
   const MENU_WIDTH = 200;
-  const COMPACT_WIDTH = 500;
+  const COMPACT_WIDTH = 400;
 
   const isFixedLeftRight =
     config.menuPosition.type === "fixed" &&
@@ -188,7 +188,10 @@ const ChatPreview = ({
             fontFamily: currentTheme.typography.fontFamily,
             fontSize: currentTheme.typography.fontSize,
             color: currentTheme.colors.text,
-            padding: currentTheme.spacing.containerPadding,
+            paddingTop: currentTheme.spacing.containerPadding,
+            paddingBottom: currentTheme.spacing.containerPadding,
+            paddingLeft: currentTheme.spacing.containerPadding,
+            paddingRight: currentTheme.spacing.containerPadding,
             ...(isFixedLeftRight &&
               !isCompact &&
               config.menuPosition.position === "left" && {

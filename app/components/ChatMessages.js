@@ -12,7 +12,7 @@ const ChatMessages = ({ sampleMessages, currentTheme, config, isCompact }) => {
         padding: currentTheme.spacing.containerPadding,
         marginTop:
           config.menuPosition.position === "top" || isCompact ? "80px" : "20px",
-        marginBottom: "20px",
+        marginBottom: "10px",
         '--scrollbar-track': currentTheme.colors.chatBackground,
         '--scrollbar-thumb': currentTheme.colors.accent,
       }}
